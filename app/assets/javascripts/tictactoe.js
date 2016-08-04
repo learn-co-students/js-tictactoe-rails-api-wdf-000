@@ -1,21 +1,49 @@
-var turn = 0, xs = 0, os = 0;
+var turn = xs = os = 0;
 var ws = [0007, 0070, 0700, 0111, 0222, 0444, 0124, 0421];
 
 function attachListeners(){
   $('td').on('click',function(){
     doTurn($(this)); 
   });
+
+  $('#save').on('click',function(){
+    saveGame();
+  });
+
+  $('#previous').on('click',function(){
+    getPreviousGames();
+  });
+}
+
+function saveGame(){
+  var state = [];
+  
+  $('td').map((i,e) => state.push($(e).text()));
+  
+  var data = { game: {state: state} }
+
+  $.post('/games', data)
+   .done(function(data){
+      console.log(data);
+   });
+}
+
+function getPreviousGames(){
+  $.get('/games',function(data){
+    console.log(data);
+  });
 }
 
 function doTurn(cell){
   updateState(cell);
   
-  # set bit-board
+  // set bit-board
   var pos = cell.data('y') * 3 + cell.data('x')
+
   if (turn & 1){
-    xs |= 1 << pos
-  } else
     os |= 1 << pos
+  } else {
+    xs |= 1 << pos
   }
 
   checkWinner();
@@ -31,9 +59,15 @@ function checkWinner(){
   }
   
   if (win){
+    resetGame();
     return message("Player " + player() + " Won!");
-  } 
-//  "Tie game"
+
+  } else if (turn == 8){
+    resetGame();
+    return message("Tie game");
+  }
+
+  return false;
 }
 
 function updateState(cell){
@@ -48,10 +82,11 @@ function message(str){
   $("#message").text(str);
 }
 
+function resetGame(){
+  $('td').text('');
+  turn = xs = os = 0;
+}
+
 $(function(){
-
-  var turn = 0, xs = 0, os = 0;
-  var ws = [0007, 0070, 0700, 0111, 0222, 0444, 0124, 0421];
-
   attachListeners();
 });
