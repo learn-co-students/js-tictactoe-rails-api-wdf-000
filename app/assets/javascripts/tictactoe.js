@@ -16,28 +16,35 @@ function attachListeners(){
   });
 }
 
-function saveGame(){
+function saveGame(autoSaveOnGameOver){
   var state = [];
   
   $('td').map((i,e) => state.push($(e).text()));
   
-  var data = { game: {state: state} },
-      idPath = '';
+  var data = { game: {state: state} }
   
   if (currentGame){
     data.game.id = currentGame;
-    data._method = 'patch';
-    idPath = '/' + currentGame;
+
+    $.ajax({
+      url: '/games/' + currentGame,
+      data: data,
+      type: 'PATCH'
+    }).done(function(data) {
+      console.log(data);
+    });
+
+  } else {
+    $.post('/games', data)
+     .done(function(data){
+        if (!autoSaveOnGameOver) currentGame = data['game']['id'];
+     });
   }
-
-  $.post('/games' + idPath, data)
-   .done(function(data){
-      currentGame = data['game']['id'];
-   });
-
+/*
   if (previousGames){
     $.grep(previousGames, function(game){ return game.id == currentGame; })[0].state = state;
   }
+*/
 }
 
 function getPreviousGames(){
@@ -122,9 +129,10 @@ function message(str){
 }
 
 function resetGame(){
-  saveGame();
+  saveGame(true);
   $('td').text('');
   turn = xs = os = 0;
+  currentGame = null;
   return true;
 }
 
