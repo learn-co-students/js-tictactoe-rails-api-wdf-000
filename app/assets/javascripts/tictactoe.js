@@ -1,4 +1,5 @@
 var turn = xs = os = 0;
+var gameId = previousGames = null
 var ws = [0007, 0070, 0700, 0111, 0222, 0444, 0124, 0421];
 
 function attachListeners(){
@@ -20,17 +21,50 @@ function saveGame(){
   
   $('td').map((i,e) => state.push($(e).text()));
   
-  var data = { game: {state: state} }
+  var data = { game: {state: state} },
+      idPath = '';
+  
+  if (gameId){
+    data.game.id = gameId;
+    data._method = 'patch';
+    idPath = '/' + gameId;
+  }
 
-  $.post('/games', data)
+  $.post('/games' + idPath, data)
    .done(function(data){
-      console.log(data);
+      gameId = data['game']['id'];
    });
 }
 
 function getPreviousGames(){
   $.get('/games',function(data){
-    console.log(data);
+ 
+    previousGames = data['games'];
+    $('#games').html('');  
+
+    $.each(previousGames,function(i,game){
+      $('#games').append(
+        '<div data-gameid="' + game.id + '" onClick="renderGame(' + i + ')">' +
+        'Game ' + game.id +
+        '</div>'
+      )
+    });
+  });
+}
+
+function renderGame(i){
+  gameId = previousGames[i].id
+  turn = 0;
+
+  $.each(previousGames[i].state,function(j,cell){
+    var x = j % 3,
+        y = Math.floor(j / 3);
+
+    $('[data-x="' + x + '"][data-y="' + y + '"]').text(cell);
+
+    if (cell){
+      turn++; 
+    }
   });
 }
 
