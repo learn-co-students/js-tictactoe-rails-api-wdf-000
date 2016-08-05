@@ -34,6 +34,10 @@ function saveGame(){
    .done(function(data){
       gameId = data['game']['id'];
    });
+
+  if (previousGames){
+    $.grep(previousGames, function(game){ return game.id == gameId; })[0].state = state;
+  }
 }
 
 function getPreviousGames(){
