@@ -1,5 +1,5 @@
 var turn = xs = os = 0;
-var gameId = previousGames = null
+var currentGame = previousGames = null
 var ws = [0007, 0070, 0700, 0111, 0222, 0444, 0124, 0421];
 
 function attachListeners(){
@@ -24,19 +24,19 @@ function saveGame(){
   var data = { game: {state: state} },
       idPath = '';
   
-  if (gameId){
-    data.game.id = gameId;
+  if (currentGame){
+    data.game.id = currentGame;
     data._method = 'patch';
-    idPath = '/' + gameId;
+    idPath = '/' + currentGame;
   }
 
   $.post('/games' + idPath, data)
    .done(function(data){
-      gameId = data['game']['id'];
+      currentGame = data['game']['id'];
    });
 
   if (previousGames){
-    $.grep(previousGames, function(game){ return game.id == gameId; })[0].state = state;
+    $.grep(previousGames, function(game){ return game.id == currentGame; })[0].state = state;
   }
 }
 
@@ -57,7 +57,7 @@ function getPreviousGames(){
 }
 
 function renderGame(i){
-  gameId = previousGames[i].id
+  currentGame = previousGames[i].id
   turn = 0;
 
   $.each(previousGames[i].state,function(j,cell){
@@ -84,8 +84,9 @@ function doTurn(cell){
     xs |= 1 << pos
   }
 
-  checkWinner();
-  turn ++;
+  if (!checkWinner()){
+    turn ++;
+  }
 }
 
 function checkWinner(){
@@ -97,12 +98,12 @@ function checkWinner(){
   }
   
   if (win){
-    resetGame();
-    return message("Player " + player() + " Won!");
+    message("Player " + player() + " Won!");
+    return resetGame();
 
   } else if (turn == 8){
-    resetGame();
-    return message("Tie game");
+    message("Tie game");
+    return resetGame();
   }
 
   return false;
@@ -121,8 +122,10 @@ function message(str){
 }
 
 function resetGame(){
+  saveGame();
   $('td').text('');
   turn = xs = os = 0;
+  return true;
 }
 
 $(function(){
