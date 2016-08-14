@@ -6,7 +6,7 @@ RSpec.describe GamesController, :type => :controller do
     before(:each) do
       Game.destroy_all
     end
-
+    
     it "creates games" do
       post :create, { :game => { :state => ["X", "", "", "", "", "", "", "", ""] } }
       expect(Game.count).to eq(1)
