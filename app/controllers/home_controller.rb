@@ -4,4 +4,7 @@ class HomeController < ApplicationController
     
   end
 
+  def save
+    
+  end
 end
