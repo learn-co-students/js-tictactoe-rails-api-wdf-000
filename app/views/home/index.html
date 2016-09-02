@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>jQuery Tic Tac Toe</title>
+		<%= javascript_include_tag "application" %>
 	</head>
 	<body>
 		<table border="1" cellpadding="40">
@@ -24,5 +25,13 @@
 		<div id="message"></div>
 		<button id="save">Save Game</button>
 		<button id="previous">Show Previous Games</button>
-	</body>
-</html>
+
+     	<script type='text/javascript'>
+        $(function () {
+ 					attachListeners();
+        });
+     	</script>
+
+   </body>
+ </html>
+   
