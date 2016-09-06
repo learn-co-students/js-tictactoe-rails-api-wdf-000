@@ -2,7 +2,7 @@
 
 describe('Tic Tac Toe Functionality', function() {
   beforeEach(function(){
-    turn = 0;
+    var turn = 0;
   });
 
   describe( "#attachListeners", function() {
@@ -36,6 +36,7 @@ describe('Tic Tac Toe Functionality', function() {
 
   describe( "#player", function() {
     it("should return the mark of the current player when player is X", function() {
+      turn = 0;
       expect(player()).toEqual("X");
     });
     it("should return the mark of the current player when player is O", function() {
@@ -48,6 +49,7 @@ describe('Tic Tac Toe Functionality', function() {
     it("adds the return value of `player()` to the clicked `td` on the board", function() {
       setFixtures('<body><table border="1" cellpadding="40"><tr><td data-x="0", data-y="0"></td><td data-x="1", data-y="0"></td><td data-x="2", data-y="0"></td></tr><tr><td data-x="0", data-y="1"></td><td data-x="1", data-y="1"></td><td data-x="2", data-y="1"></td></tr><tr><td data-x="0", data-y="2"></td><td data-x="1", data-y="2"></td><td data-x="2", data-y="2"></td></tr></table></body>');
       attachListeners();
+      turn = 0;
       var selector = '[data-x="0"][data-y="0"]';
       $(selector).click();
       expect($(selector).html()).toEqual("X");
@@ -163,6 +165,7 @@ describe('Tic Tac Toe Functionality', function() {
 
     it("resets the board and sets turn to zero when there is a tie", function() {
       setFixtures('<body><table border="1" cellpadding="40"><tr><td data-x="0", data-y="0"></td><td data-x="1", data-y="0"></td><td data-x="2", data-y="0"></td></tr><tr><td data-x="0", data-y="1"></td><td data-x="1", data-y="1"></td><td data-x="2", data-y="1"></td></tr><tr><td data-x="0", data-y="2"></td><td data-x="1", data-y="2"></td><td data-x="2", data-y="2"></td></tr></table><div id="message"></div><button id="lastGame">Show Me Last Games Results!</button><div id="lastGameBox"></div></body>');
+      turn = 0;
       attachListeners();
       $('[data-x="0"][data-y="0"]').click();
       $('[data-x="1"][data-y="1"]').click();
@@ -234,7 +237,7 @@ describe('Tic Tac Toe Functionality', function() {
 describe('#integration tests of persistence', function() {
   beforeEach(function(){
     turn = 0;
-    currentGame = 0;
+    var currentGame = 0;
   });
   it("if i click the getAllGames button it should send a get request to /games", function() {
     setFixtures('<body><table border="1" cellpadding="40"><tr><td data-x="0", data-y="0"></td><td data-x="1", data-y="0"></td><td data-x="2", data-y="0"></td></tr><tr><td data-x="0", data-y="1"></td><td data-x="1", data-y="1"></td><td data-x="2", data-y="1"></td></tr><tr><td data-x="0", data-y="2"></td><td data-x="1", data-y="2"></td><td data-x="2", data-y="2"></td></tr></table><div id="games"></div><div id="message"></div><button id="save">Save Game</button><button id="previous">Show Previous Games</button></body>');
@@ -454,7 +457,7 @@ describe('#integration tests of persistence', function() {
       }
       jasmine.Ajax.requests.mostRecent().respondWith(response);
       // when you display the previous games you must give them a data attribute of gameid
-      $('[data-gameid="2"]').click()
+      $('[data-gameid="2"]').click();
       expect($('[data-x="0"][data-y="0"]').text()).toBe("")
       expect($('[data-x="1"][data-y="0"]').text()).toBe("X")
       expect($('[data-x="2"][data-y="0"]').text()).toBe("O")
