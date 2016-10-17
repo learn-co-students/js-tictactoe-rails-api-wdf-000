@@ -33,6 +33,54 @@ function getBoard(){
   var elements = $('td').map(function (){return this.innerText;});
   return jQuery.makeArray(elements);
 }
+
+function autoSave(){
+  var tokens = getBoard();
+  var game = {"game": {"state": tokens}};
+  if(currentGame == 0){
+    $.ajax({
+      url: '/games',
+      method: 'POST',
+      data: game
+    });
+  } else {
+    game["game"]["id"] = currentGame;
+    var url = '/games' + '/' + currentGame
+    $.ajax({
+      url: url,
+      method: 'PATCH',
+      data: game
+    });
+  }
+}
+
+function saveGame(){
+  var tokens = getBoard();
+  var game = {"game": {"state": tokens}};
+  if(currentGame == 0){
+    $.ajax({
+      url: '/games',
+      method: 'POST',
+      data: game
+    }).done(function(data){
+      // debugger;
+      if (!!data["game"]){
+        currentGame = data["game"]["id"];
+      } else {
+        currentGame = data["id"];
+      }
+    });
+  } else {
+    game["game"]["id"] = currentGame;
+    var url = '/games' + '/' + currentGame
+    $.ajax({
+      url: url,
+      method: 'PATCH',
+      data: game
+    });
+  }
+}
+
 function checkTie(){
   board = getBoard();
   var tie = true;
@@ -46,12 +94,13 @@ function checkTie(){
 }
 
 function resetBoard(){
+  turn = 0;
+  currentGame = 0;
   $("td").each(function(){
     this.innerHTML = "";
   });
-  turn = 0;
-  currentGame = 0;
 }
+
 function setGame(stateHash){
   var cells = JSON.parse(stateHash);
   $("td").each(function(index, node){
@@ -97,12 +146,13 @@ function checkWinner(){
       return $(combination)[0].innerText;
     });
     if (combo.every(equalsX)){
+
       message("Player X Won!");
-      resetBoard();
+      $.when( autoSave()).then( resetBoard());
       return true;
     } else if (combo.every(equalsO)){
       message("Player O Won!");
-      resetBoard();
+      $.when( autoSave()).then( resetBoard());
       return true;
     } else {  //continue checking combos
     }
@@ -116,8 +166,8 @@ function doTurn(event){
   winner = checkWinner();
   if (!winner){
     if(checkTie()){
-      resetBoard();
       message("Tie game");
+      $.when( autoSave()).then( resetBoard());
     }
   }
 }
@@ -133,32 +183,7 @@ function attachListeners(){
   $('#save').bind("click", function(event){
     event.preventDefault();
     event.stopPropagation();
-    var tokens = getBoard();
-    var game = {"game": {"state": tokens}};
-    // var stringState = JSON.stringify(game["game"]["state"]);
-    // game["game"]["state"] = stringState;
-
-    if(currentGame === 0){
-      $.ajax({
-        url: '/games',
-        method: 'POST',
-        data: game
-      }).done(function(data){
-        if (!!data["game"]){
-          currentGame = data["game"]["id"];
-        } else {
-          currentGame = data["id"];
-        }
-      });
-    } else {
-      game["game"]["id"] = currentGame;
-      var url = '/games' + '/' + currentGame
-      $.ajax({
-        url: url,
-        method: 'PATCH',
-        data: game
-      });
-    }
+    saveGame();
   });
 
   ///Watch for clicks in the previous games button and list after it has been generated
@@ -178,7 +203,7 @@ function attachListeners(){
 
         ///now that there is a list, attach listeners
         $('#games li').bind("click", function(event){
-          event.stopImmediatePropagation()
+          event.stopPropagation();
           getGame(event);
         });
 
