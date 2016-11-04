@@ -12,17 +12,19 @@
   <script src="node_modules/gulp-jasmine-livereload-task/vendor/jasmine-2.2.0/jasmine-html.js"></script>
   <script src="node_modules/gulp-jasmine-livereload-task/vendor/jasmine-2.2.0/boot.js"></script>
 
-  <script>var gulpJasmineLivereloadTask = {}; gulpJasmineLivereloadTask.options = JSON.parse('{"jasmine":"2.2","livereload":"35729","staticAssetsPath":".","specRunner":"SpecRunner.html","jshint":{"version":"2.6","files":[],"options":{}},"watch":{"options":{}},"files":["./src/**/*.js","./js/**/*.js","./lib/**/*.js","./spec/**/*.js"]}');</script>
+  <script>var gulpJasmineLivereloadTask = {}; gulpJasmineLivereloadTask.options = JSON.parse('{"jasmine":"2.2","livereload":"35729","staticAssetsPath":".","specRunner":"SpecRunner.html","jshint":{"version":"2.6","files":[],"options":{}},"watch":{"options":{}},"files":["./app/assets/**/*.js","./spec/**/*.js"]}');</script>
 
   <!-- sources:js -->
 
   <!-- jshint:js -->
 
   <!-- inject:js -->
+  <script src="app/assets/javascripts/application.js"></script>
+  <script src="app/assets/javascripts/tictactoe.js"></script>
+  <script src="spec/tictactoe.spec.js"></script>
   <script src="spec/lib/jasmine-jquery.js"></script>
   <script src="spec/lib/jquery.min.js"></script>
   <script src="spec/lib/mock-ajax.js"></script>
-  <script src="spec/tictactoe.spec.js"></script>
   <!-- endinject -->
 
   <script src="http://localhost:35729/livereload.js"></script>

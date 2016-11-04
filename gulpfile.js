@@ -2,5 +2,5 @@ var gulp    = require('gulp'),
     jasmine = require('gulp-jasmine-livereload-task');
 
 gulp.task('default', jasmine({
-    files: ['./src/**/*.js', './js/**/*.js', './lib/**/*.js', './spec/**/*.js']
+    files: ['./app/assets/**/*.js','./spec/**/*.js']
 }));
