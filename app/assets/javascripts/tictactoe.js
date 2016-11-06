@@ -14,11 +14,24 @@ var WIN_COMBINATIONS = [
 ];
 
 var turn = 0;
+var currentGame = 0;
 
 // attach event listeners to td fields
 function attachListeners() {
   $('td').on('click', function(ev) {
     doTurn(ev);
+  });
+
+  // get request to games index
+  $('#previous').on('click', function() {
+    let $target = $(this);
+    $.get('/games', function(games) {
+    }).success(function(games){
+      let $games = $(games);
+      $games.each(function(index, game) {
+        $("#games").append("<p>" + game.id + "</p>");
+      });
+    });
   });
 }
 
