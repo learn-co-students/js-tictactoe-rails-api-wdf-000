@@ -1,6 +1,9 @@
 class GamesController < ApplicationController
 
   def index
+    @games = Game.all
+    # why is adapter: :json not adding root key?
+    render json: @games, adapter: :json
   end
 
   def show
