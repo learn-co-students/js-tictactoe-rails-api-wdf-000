@@ -24,7 +24,6 @@ function attachListeners() {
 
   // get request to games index
   $('#previous').on('click', function() {
-    let $target = $(this);
     $.get('/games', function(games) {
     }).success(function(games){
       let $games = $(games);
@@ -32,6 +31,13 @@ function attachListeners() {
         $("#games").append("<p>" + game.id + "</p>");
       });
     });
+  });
+
+  // post request to games create action
+  $("#save").on("click", function() {
+    let $gameState = $(board());
+    let values = JSON.stringify($gameState);
+    let posting = $.post("/games", {state: values});
   });
 }
 
