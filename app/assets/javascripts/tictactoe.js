@@ -2,7 +2,7 @@ $(document).ready(function() {
   attachListeners();
 });
 
-const win_combinations = [
+var win_combinations = [
   [0,1,2],
   [3,4,5],
   [6,7,8],
@@ -32,27 +32,7 @@ function updateState(event) {
 }
 
 function checkWinner() {
-
-}
-
-// Stopped at figuring out how to take board and check against winning combinations for a win or draw or over
-// And trying to translate code form
-// https://github.com/ozPop/ttt-game-status-wdf-000/blob/solution/lib/game_status.rb
-var board = function() {
-  return $.map($('td'), function(value, index) {
-    return value.innerHTML;
-  });
-};
-
-function checkWin(board) {
-  console.log(board);
-  // let s = null;
-  // $.each(win_combinations, function(index, value) {
-  //   // console.log(value);
-  //   s =  board[value[0]] == board[value[1]] &&
-  //   board[value[1]] == board[value[1]];
-  // });
-  // console.log(s);
+  return isOver();
 }
 
 function player() {
@@ -61,4 +41,52 @@ function player() {
 
 function message(string) {
   $('#message').html(string);
+}
+
+// CUSTOM HELPERS
+
+function board() {
+  return $.map($('td'), function(value, index) {
+    return value.innerHTML;
+  });
+}
+
+function won() {
+  let boardState = board();
+  let winCombo = null;
+  $.each(win_combinations, function(index, combo) {
+    if (winCombo === null) {
+      var check =
+      boardState[combo[0]] === boardState[combo[1]] &&
+      boardState[combo[1]] === boardState[combo[2]] &&
+      boardState[combo[0]] !== "";
+      if ( check === true ) {
+        winCombo = combo;
+      }
+    }
+  });
+  // returns null when board is empty or no win is detected
+  return winCombo;
+}
+
+function isFull() {
+  let boardState = board();
+  return boardState.every(elem => elem !== "");
+}
+
+function isDraw() {
+  return isFull() && !won();
+}
+
+function isOver() {
+  return won() || isFull();
+}
+
+function winner() {
+  let boardState = board();
+  let winCombo = won();
+  if ( winCombo !== null ) { 
+    return boardState[winCombo[0]];
+  }
+  return false;
 }
