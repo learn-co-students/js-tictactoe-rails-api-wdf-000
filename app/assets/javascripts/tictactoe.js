@@ -21,6 +21,7 @@ function attachListeners() {
     doTurn(e);
   });
   getAllGames();
+  saveGame();
 }
 
 function getAllGames() {
@@ -31,6 +32,16 @@ function getAllGames() {
         $('#games').append($('<p>'+ value.id +'</p>'));
       });
     });
+  });
+}
+
+function saveGame() {
+  $('#save').on('click', function() {
+    let serializedBoard = JSON.stringify($(board()));
+    let posting = $.post('/games', {"state": serializedBoard});
+    // posting.done(function(data) {
+
+    // });
   });
 }
 
