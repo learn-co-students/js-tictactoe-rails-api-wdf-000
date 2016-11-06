@@ -3,6 +3,17 @@
 describe('Tic Tac Toe Functionality', function() {
   beforeEach(function(){
     turn = 0;
+
+    WIN_COMBINATIONS = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
   });
 
   describe( "#attachListeners", function() {
@@ -348,10 +359,10 @@ describe('#integration tests of persistence', function() {
           id:1,
           state: ["X","","","","","","","",""]
         },
-        {
-          id:2,
-          state: ["","","","","","","","",""]
-        }
+          {
+            id:2,
+            state: ["","","","","","","","",""]
+          }
         ]
       }
       var response = {
@@ -441,10 +452,10 @@ describe('#integration tests of persistence', function() {
           id:1,
           state: ["X","","","","","","","",""]
         },
-        {
-          id:2,
-          state: ["","X","O","","O","","","",""]
-        }
+          {
+            id:2,
+            state: ["","X","O","","O","","","",""]
+          }
         ]
       }
       var response = {
