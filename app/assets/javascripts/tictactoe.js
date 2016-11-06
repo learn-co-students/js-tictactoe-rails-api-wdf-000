@@ -23,8 +23,8 @@ function attachListeners() {
 
 function doTurn(event, element) {
   updateState(event);
-  checkWinner();
   turn += 1;
+  checkWinner();
 }
 
 function updateState(event) {
@@ -32,7 +32,18 @@ function updateState(event) {
 }
 
 function checkWinner() {
-  return isOver();
+  if ( winner() !== false ) {
+    message("Player " + winner() + " Won!");
+    turn = 0;
+    resetBoard();
+  } else if ( isDraw() ) {
+    message("Tie game");
+    turn = 0;
+    resetBoard();
+  } else {
+    return isOver();
+  }
+  return console.log("Game Finished!");
 }
 
 function player() {
@@ -89,4 +100,10 @@ function winner() {
     return boardState[winCombo[0]];
   }
   return false;
+}
+
+function resetBoard() {
+  $("td").each(function() {
+    $(this).html("");
+  });
 }
