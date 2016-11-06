@@ -24,8 +24,8 @@ function attachListeners() {
 
 function doTurn(event) {
   updateState(event);
-  checkWinner();
   turn += 1; // make sure to check if this needs to be moved before checking winner()
+  checkWinner();
 }
 
 function updateState(event) {
@@ -34,7 +34,22 @@ function updateState(event) {
 }
 
 function checkWinner() {
-  return gameOver();
+  // if (gameOver() && ) {
+  // }
+  // let winningToken = winner();
+  if ( winner() !== false ) {
+    let msg = "Player " + winner() + " Won!";
+    message(msg);
+    turn = 0;
+    resetBoard();
+  } else if (isDraw()) {
+    message("Tie game");
+    turn = 0;
+    resetBoard();
+  } else {
+    return gameOver();
+  }
+  return console.log('Game finished!');
 }
 
 function player() {
@@ -91,3 +106,8 @@ function winner() {
   return false;
 }
 
+function resetBoard() {
+  $('td').each(function() {
+    $(this).html("");
+  });
+}
