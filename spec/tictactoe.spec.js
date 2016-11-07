@@ -13,6 +13,12 @@ describe('Tic Tac Toe Functionality', function() {
       [0,4,8],
       [6,4,2]
     ];
+    class Game {
+      constructor(state = new Array(9).fill("")) {
+        this.state = state;
+      }
+    }
+    game = new Game();
   });
 
   describe( "#attachListeners", function() {
