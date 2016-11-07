@@ -18,6 +18,10 @@ class GamesController < ApplicationController
   end
 
   def update
+    game = Game.find(params[:id])
+    state = JSON.parse(game_params[:state]).values.slice(0..-2)
+    game.update(state: state)
+    render json: game, status: 200
   end
 
   private
