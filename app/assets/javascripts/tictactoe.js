@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  game = new Game();
+  game.id = assignId();
   attachListeners();
 });
 
@@ -13,6 +15,7 @@ var win_combinations = [
   [6,4,2]
 ];
 
+var game;
 var turn = 0;
 var currentGame = 0;
 
@@ -27,7 +30,7 @@ function attachListeners() {
 function getAllGames() {
   $('#previous').on('click', function() {
     $.get('/games', function(data) {
-    }).success(function(data) {
+    }).done(function(data) {
       $.each(data, function(index, value) {
         $('#games').append($('<p>'+ value.id +'</p>'));
       });
@@ -37,7 +40,7 @@ function getAllGames() {
 
 function saveGame() {
   $('#save').on('click', function() {
-    let serializedBoard = JSON.stringify($(board()));
+    let serializedBoard = JSON.stringify($(game.state));
     let posting = $.post('/games', {"state": serializedBoard});
     // posting.done(function(data) {
 
@@ -45,14 +48,10 @@ function saveGame() {
   });
 }
 
-function doTurn(event, element) {
+function doTurn(event) {
   updateState(event);
   turn += 1;
   checkWinner();
-}
-
-function updateState(event) {
-  $(event.target).html(player());
 }
 
 function checkWinner() {
@@ -79,6 +78,37 @@ function message(string) {
 }
 
 // CUSTOM HELPERS
+
+class Game {
+  constructor(state = new Array(9).fill("")) {
+    this.state = state;
+  }
+}
+
+function assignId() {
+  $.get('/games', function(response) {
+  }).done(function(response) {
+    id = response[response.length -1].id + 1;
+    game.id = id;
+  });
+}
+
+function updateState(event) {
+  let token = player();
+  let $target = $(event.target);
+  let index = parseInt($target.attr('id'));
+  game.state[index] = token;
+  $target.html(player());
+}
+
+// display stored state on the board
+function updateBoardState(gameState) {
+  let $board = $('td');
+  $.each(game.state, function(index, value) {
+    let $target = $($board[index]);
+    $target.html(value);
+  });
+}
 
 function board() {
   return $.map($('td'), function(value, index) {
