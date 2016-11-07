@@ -1,5 +1,6 @@
 $(document).ready(function(){
   game = new Game();
+  assignGameId();
   attachListeners();
 });
 
@@ -16,7 +17,8 @@ var WIN_COMBINATIONS = [
 
 // game constructor
 class Game {
-  constructor(state = new Array(9).fill("")) {
+  constructor(id = null, state = new Array(9).fill("")) {
+    this.id = id;
     this.state = state;
   }
 }
@@ -25,7 +27,7 @@ var game;
 var turn = 0;
 var currentGame = 0;
 
- // if turn count is more than 0 then the game has started so we can look into that for the patch request
+// if turn count is more than 0 then the game has started so we can look into that for the patch request
 // switch url inside the post according to that variable
 
 // attach event listeners to td fields
@@ -37,7 +39,7 @@ function attachListeners() {
   // get request to games index
   $('#previous').on('click', function() {
     $.get('/games', function(games) {
-    }).success(function(games){
+    }).done(function(games){
       let $games = $(games);
       $games.each(function(index, game) {
         $("#games").append("<p>" + game.id + "</p>");
@@ -47,29 +49,27 @@ function attachListeners() {
 
   // post request to games create action
   $("#save").on("click", function() {
-    let $gameState = $(board());
-    let values = JSON.stringify($gameState);
-    // let url = turn < 1 ? "/games" : "/games/"
+    let values = JSON.stringify($(game.state));
     let posting = $.post("/games", {state: values});
   });
 }
 
 function doTurn(event) {
   updateState(event);
-  turn += 1; // make sure to check if this needs to be moved before checking winner()
+  turn += 1;
   checkWinner();
 }
 
+// clicking cells updates game's state
 function updateState(event) {
-  var target = $(event.target);
-  target.html(player());
-  game.state = board();
+  let $target = $(event.target);
+  let index = parseInt($target.attr("id"));
+  let token = player();
+  game.state[index] = token;
+  $target.html(token);
 }
 
 function checkWinner() {
-  // if (gameOver() && ) {
-  // }
-  // let winningToken = winner();
   if ( winner() !== false ) {
     let msg = "Player " + winner() + " Won!";
     message(msg);
@@ -91,9 +91,28 @@ function player() {
 
 function message(msg) {
   $('#message').html(msg);
+  return msg;
 }
 
-// helpers
+// ******* helpers ******* //
+// get last game id from database
+function assignGameId() {
+  $.get('/games', function(response) {
+  }).done(function(response) {
+    id = response[response.length -1].id + 1;
+    game.id = id;
+  });
+}
+
+// used to update html with game's state
+function updateBoardState(gameState) {
+  let $board = $('td');
+  $.each(game.state, function(index, value) {
+    let $target = $($board[index]);
+    $target.html(value);
+  });
+}
+
 function board(){
   let arr = $('td');
   return $.map(arr, (value, index) => value.innerHTML );
@@ -143,4 +162,6 @@ function resetBoard() {
   $('td').each(function() {
     $(this).html("");
   });
+  // game = new Game();
+  // updateBoardState(game.state);
 }

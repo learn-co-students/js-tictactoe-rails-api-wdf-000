@@ -6,6 +6,7 @@ class GamesController < ApplicationController
   end
 
   def create
+    binding.pry
     state = JSON.parse(game_params[:state]).values.slice(0..-2)
     game = Game.create(state: state)
     render json: game, status: 201
