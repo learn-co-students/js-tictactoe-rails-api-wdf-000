@@ -1,20 +1,20 @@
 class GamesController < ApplicationController
 
   def index
-    @games = Game.all
+    games = Game.all
     # why is adapter: :json not adding root key?
-    render json: @games, adapter: :json
+    render json: games, adapter: :json
   end
 
   def show
-    @game = Game.find(params[:id])
-    render json: @game, adapter: :json
+    game = Game.find(params[:id])
+    render json: game, adapter: :json
   end
 
   def create
     state = JSON.parse(game_params[:state]).values.slice(0..-2)
-    @game = Game.create(state: state)
-    render json: @game, status: 201
+    game = Game.create(state: state)
+    render json: game, status: 201
   end
 
   def update
