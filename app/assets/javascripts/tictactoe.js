@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  game = new Game();
   attachListeners();
 });
 
@@ -13,8 +14,19 @@ var WIN_COMBINATIONS = [
   [2, 4, 6]
 ];
 
+// game constructor
+class Game {
+  constructor(state = new Array(9).fill("")) {
+    this.state = state;
+  }
+}
+
+var game;
 var turn = 0;
 var currentGame = 0;
+
+ // if turn count is more than 0 then the game has started so we can look into that for the patch request
+// switch url inside the post according to that variable
 
 // attach event listeners to td fields
 function attachListeners() {
@@ -37,6 +49,7 @@ function attachListeners() {
   $("#save").on("click", function() {
     let $gameState = $(board());
     let values = JSON.stringify($gameState);
+    // let url = turn < 1 ? "/games" : "/games/"
     let posting = $.post("/games", {state: values});
   });
 }
@@ -50,6 +63,7 @@ function doTurn(event) {
 function updateState(event) {
   var target = $(event.target);
   target.html(player());
+  game.state = board();
 }
 
 function checkWinner() {
