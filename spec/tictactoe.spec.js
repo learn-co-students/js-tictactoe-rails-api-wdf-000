@@ -283,10 +283,8 @@ describe('#integration tests of persistence', function() {
     attachListeners()
     jasmine.Ajax.withMock(function() {
       var data = {
-        game: {
-          id:1,
-          state: ["X","","","","","","","",""]
-        }
+        id:1,
+        state: ["X","","","","","","","",""]
       }
       var response = {
         "status": 200,
@@ -387,8 +385,8 @@ describe('#integration tests of persistence', function() {
 
   it("if i play a game it should autosave at the end of the game", function() {
     setFixtures('<body><table border="1" cellpadding="40"><tr><td data-x="0", data-y="0"></td><td data-x="1", data-y="0"></td><td data-x="2", data-y="0"></td></tr><tr><td data-x="0", data-y="1"></td><td data-x="1", data-y="1"></td><td data-x="2", data-y="1"></td></tr><tr><td data-x="0", data-y="2"></td><td data-x="1", data-y="2"></td><td data-x="2", data-y="2"></td></tr></table><div id="games"></div><div id="message"></div><button id="save">Save Game</button><button id="previous">Show Previous Games</button></body>');
-    attachListeners()
     expect($("#games").children().length).toBe(0);
+    attachListeners()
     jasmine.Ajax.withMock(function() {
 
       $('[data-x="0"][data-y="0"]').click();
