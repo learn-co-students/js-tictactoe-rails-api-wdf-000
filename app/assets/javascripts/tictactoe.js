@@ -1,6 +1,5 @@
 $(document).ready(function(){
   game = new Game();
-  assignGameId();
   attachListeners();
 });
 
@@ -17,8 +16,8 @@ var WIN_COMBINATIONS = [
 
 // game constructor
 class Game {
-  constructor(id = null, state = new Array(9).fill("")) {
-    this.id = id;
+  constructor(state = new Array(9).fill("")) {
+    this.id = null;
     this.state = state;
   }
 }
@@ -38,19 +37,44 @@ function attachListeners() {
 
   // get request to games index
   $('#previous').on('click', function() {
-    $.get('/games', function(games) {
-    }).done(function(games){
-      let $games = $(games);
-      $games.each(function(index, game) {
-        $("#games").append("<p>" + game.id + "</p>");
+    $.get('/games', function(response) {
+    }).done(function(response){
+      let games = response.games;
+      let html = "";
+      // might need conditional to check for games' length
+      $.each(games, function(index, game) {
+        html += "<p>" + game.id + "</p>";
       });
+      $("#games").html(html);
     });
   });
 
   // post request to games create action
   $("#save").on("click", function() {
     let values = JSON.stringify($(game.state));
-    let posting = $.post("/games", {state: values});
+    let url = game.id ? '/games/' + game.id : '/games';
+    if (url === '/games') {
+      $.ajax({
+        method: 'POST',
+        url: url,
+        data: {
+          game: {"state": values}
+        }
+      }).done(function(response) {
+        // this updates the current game's id with the response from the server
+        game.id = response.game.id;
+      });
+    } else {
+      $.ajax({
+        method: 'PATCH',
+        url: url,
+        data: {
+          game: {"state": values}
+        }
+      }).done(function(response) {
+        console.log('Game successfully updated');
+      });
+    }
   });
 }
 
@@ -95,15 +119,6 @@ function message(msg) {
 }
 
 // ******* helpers ******* //
-// get last game id from database
-function assignGameId() {
-  $.get('/games', function(response) {
-  }).done(function(response) {
-    id = response[response.length -1].id + 1;
-    game.id = id;
-  });
-}
-
 // used to update html with game's state
 function updateBoardState(gameState) {
   let $board = $('td');
