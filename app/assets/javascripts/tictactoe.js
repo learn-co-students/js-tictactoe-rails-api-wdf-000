@@ -28,16 +28,14 @@ function attachListeners() {
 
 function getAllGames() {
   $('#previous').on('click', function() {
-    $.get('/games', function(data) {
-    }).done(function(data) {
-      let games = data.games;
+    $.get('/games', function(response) {
+    }).done(function(response) {
+      let games = response.games;
       let html = "";
-      if ( games.length > 0 ) {
-        $.each(games, function(index, value) {
-          html += '<p>'+ value.id +'</p>';
-        });
-        $('#games').html(html);
-      }
+      $.each(games, function(index, value) {
+        html += '<p>'+ value.id +'</p>';
+      });
+      $('#games').html(html);
     });
   });
 }
