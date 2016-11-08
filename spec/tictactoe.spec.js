@@ -17,6 +17,7 @@ describe('Tic Tac Toe Functionality', function() {
 
     class Game {
       constructor(state = new Array(9).fill("")) {
+        this.id = null;
         this.state = state;
       }
     }
