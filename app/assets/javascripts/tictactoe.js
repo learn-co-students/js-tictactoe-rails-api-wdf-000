@@ -1,7 +1,5 @@
 $(document).ready(function() {
   game = new Game();
-  game.id = assignId();
-  // game.id = 6;
   attachListeners();
 });
 
@@ -32,70 +30,45 @@ function getAllGames() {
   $('#previous').on('click', function() {
     $.get('/games', function(data) {
     }).done(function(data) {
+      let games = data.games;
       let html = "";
-      $.each(data, function(index, value) {
-        html += '<p>'+ value.id +'</p>';
-      });
+      if ( games.length > 0 ) {
+        $.each(games, function(index, value) {
+          html += '<p>'+ value.id +'</p>';
+        });
         $('#games').html(html);
+      }
     });
   });
 }
 
 function saveGame() {
   $('#save').on('click', function() {
-    processGame();
-    // let serializedBoard = JSON.stringify($(game.state));
-    // let posting = $.post('/games', {"state": serializedBoard});
-    // posting.done(function(data) {
-    // });
-  });
-}
-
-function processGame() {
-
-  (function() {
-    $.get('/games').done(function(data) {
-      let gameIds = $.map( data, function( obj, index ) {
-        return obj.id;
-      });
-      getUrls(gameIds);
-    });
-  })();
-
-  function getUrls(gameIds) {
-    let url = null;
-    let id = gameIds.find(function(elem) {
-      return elem === game.id;
-    });
-
-    if ( id ) {
-      url = '/games/' + String(id);
-    } else {
-      url = '/games';
-    }
-    return makeRequest(url);
-  }
-
-  function makeRequest(url) {
+    let url = game.id ? '/games/' + String(game.id) : '/games';
     let serializedBoard = JSON.stringify($(game.state));
     if (url === '/games') {
       $.ajax({
         method: "POST",
         url: url,
-        data: {"state": serializedBoard}
-      }).done(function(msg) {
-        alert( "Game Created: " + msg);
+        data: {
+          game: {"state": serializedBoard}
+        }
+      }).done(function(response) {
+        game.id = response.game.id;
+        console.log( 'Game #' + game.id + ' created.');
       });
     } else {
       $.ajax({
         method: "PATCH",
         url: url,
-        data: {"state": serializedBoard}
-      }).done(function(msg) {
-        alert( "Game Updated: " + msg);
+        data: {
+          game: {"state": serializedBoard}
+        }
+      }).done(function(response) {
+        console.log( 'Game #' + response.game.id + ' updated.');
       });
     }
-  }
+  });
 }
 
 function doTurn(event) {
@@ -131,16 +104,9 @@ function message(string) {
 
 class Game {
   constructor(state = new Array(9).fill("")) {
+    this.id = null;
     this.state = state;
   }
-}
-
-function assignId() {
-  $.get('/games', function(response) {
-  }).done(function(response) {
-    id = response[response.length -1].id + 1;
-    game.id = id;
-  });
 }
 
 function updateState(event) {
