@@ -22,51 +22,54 @@ function attachListeners() {
   $('td').on('click', function(e) {
     doTurn(e);
   });
-  getAllGames();
-  saveGame();
+  $('#previous').on('click', function() {
+    getAllGames();
+  });
+  $('#save').on('click', function() {
+    saveGame();
+  });
+  $('#games').on('click', 'p', function() {
+    showPreviousGame($(this).html());
+  });
 }
 
 function getAllGames() {
-  $('#previous').on('click', function() {
-    $.get('/games', function(response) {
-    }).done(function(response) {
-      let games = response.games;
-      let html = "";
-      $.each(games, function(index, value) {
-        html += '<p>'+ value.id +'</p>';
-      });
-      $('#games').html(html);
+  $.get('/games')
+    .done(function(response) {
+    let games = response.games;
+    let html = "";
+    $.each(games, function(index, value) {
+      html += '<p>'+ value.id +'</p>';
     });
+    $('#games').html(html);
   });
 }
 
 function saveGame() {
-  $('#save').on('click', function() {
-    let url = game.id ? '/games/' + String(game.id) : '/games';
-    let serializedBoard = JSON.stringify($(game.state));
-    if (url === '/games') {
-      $.ajax({
-        method: "POST",
-        url: url,
-        data: {
-          game: {"state": serializedBoard}
-        }
-      }).done(function(response) {
-        game.id = response.game.id;
-        console.log( 'Game #' + game.id + ' created.');
-      });
-    } else {
-      $.ajax({
-        method: "PATCH",
-        url: url,
-        data: {
-          game: {"state": serializedBoard}
-        }
-      }).done(function(response) {
-        console.log( 'Game #' + response.game.id + ' updated.');
-      });
-    }
-  });
+  let url = game.id ? '/games/' + String(game.id) : '/games';
+  let serializedBoard = JSON.stringify($(game.state));
+  if (url === '/games') {
+    $.ajax({
+      method: "POST",
+      url: url,
+      data: {
+        game: {"state": serializedBoard}
+      }
+    }).done(function(response) {
+      game.id = response.id;
+      console.log( 'Game #' + game.id + ' created.');
+    });
+  } else {
+    $.ajax({
+      method: "PATCH",
+      url: url,
+      data: {
+        game: {"state": serializedBoard}
+      }
+    }).done(function(response) {
+      console.log( 'Game #' + response.id + ' updated.');
+    });
+  }
 }
 
 function doTurn(event) {
@@ -79,10 +82,12 @@ function checkWinner() {
   if ( winner() !== false ) {
     message("Player " + winner() + " Won!");
     turn = 0;
+    saveGame();
     resetBoard();
   } else if ( isDraw() ) {
     message("Tie game");
     turn = 0;
+    saveGame();
     resetBoard();
   } else {
     return isOver();
@@ -116,11 +121,18 @@ function updateState(event) {
 }
 
 // display stored state on the board
-function updateBoardState(gameState) {
+function updateBoardState(game) {
   let $board = $('td');
   $.each(game.state, function(index, value) {
     let $target = $($board[index]);
     $target.html(value);
+  });
+}
+
+function showPreviousGame(gameId) {
+  $.get('/games/' + gameId, function(response) {
+    game = response.game;
+    updateBoardState(game);
   });
 }
 
