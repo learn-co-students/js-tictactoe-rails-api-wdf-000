@@ -13,12 +13,13 @@ class GamesController < ApplicationController
   def create
     state = JSON.parse(game_params[:state]).values.slice(0..-2)
     game = Game.create(state: state)
-    render json: game, status: 201
+    data = {"game": game.to_json}
+    render json: data, status: 201
   end
 
   def update
     game = Game.find(params[:id])
-    state = JSON.parse(game_params(:state)).values.slice(0..-2)
+    state = JSON.parse(game_params[:state]).values.slice(0..-2)
     game.update(state: state)
     render json: game, status: 200
   end
