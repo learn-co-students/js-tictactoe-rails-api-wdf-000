@@ -38,7 +38,6 @@ function attachListeners() {
   // get request to games index
   $('#previous').on('click', function() {
     $.get('/games', function(response) {
-    }).done(function(response){
       let games = response.games;
       let html = "";
       // might need conditional to check for games' length
@@ -49,33 +48,50 @@ function attachListeners() {
     });
   });
 
-  // post request to games create action
   $("#save").on("click", function() {
-    let values = JSON.stringify($(game.state));
-    let url = game.id ? '/games/' + game.id : '/games';
-    if (url === '/games') {
-      $.ajax({
-        method: 'POST',
-        url: url,
-        data: {
-          game: {"state": values}
-        }
-      }).done(function(response) {
-        // this updates the current game's id with the response from the server
-        game.id = response.game.id;
-      });
-    } else {
-      $.ajax({
-        method: 'PATCH',
-        url: url,
-        data: {
-          game: {"state": values}
-        }
-      }).done(function(response) {
-        console.log('Game successfully updated');
-      });
-    }
+    processGame();
   });
+
+  showPreviousGame();
+}
+
+// attach a listener for clicking on a previous game
+function showPreviousGame() {
+  $('#games').on('click', 'p', function() {
+    let gameId = $(this).html();
+    $.get('/games/' + gameId, function(response) {
+      game = response.game;
+      updateBoardState(game);
+    });
+  });
+}
+
+// post request to games create action
+function processGame() {
+  let values = JSON.stringify($(game.state));
+  let url = game.id ? '/games/' + game.id : '/games';
+  if (url === '/games') {
+    $.ajax({
+      method: 'POST',
+      url: url,
+      data: {
+        game: {"state": values}
+      }
+    }).done(function(response) {
+      // this updates the current game's id with the response from the server
+      game.id = response.id;
+    });
+  } else {
+    $.ajax({
+      method: 'PATCH',
+      url: url,
+      data: {
+        game: {"state": values}
+      }
+    }).done(function(response) {
+      console.log('Game successfully updated');
+    });
+  }
 }
 
 function doTurn(event) {
@@ -95,11 +111,13 @@ function updateState(event) {
 
 function checkWinner() {
   if ( winner() !== false ) {
+    processGame();
     let msg = "Player " + winner() + " Won!";
     message(msg);
     turn = 0;
     resetBoard();
   } else if (isDraw()) {
+    processGame();
     message("Tie game");
     turn = 0;
     resetBoard();
@@ -120,7 +138,7 @@ function message(msg) {
 
 // ******* helpers ******* //
 // used to update html with game's state
-function updateBoardState(gameState) {
+function updateBoardState(game) {
   let $board = $('td');
   $.each(game.state, function(index, value) {
     let $target = $($board[index]);
@@ -177,6 +195,4 @@ function resetBoard() {
   $('td').each(function() {
     $(this).html("");
   });
-  // game = new Game();
-  // updateBoardState(game.state);
 }
