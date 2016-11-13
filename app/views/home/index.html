@@ -1,23 +1,24 @@
 <html>
 	<head>
 		<title>jQuery Tic Tac Toe</title>
+		<%= javascript_include_tag "application" %>
 	</head>
 	<body>
 		<table border="1" cellpadding="40">
 			<tr>
-				<td data-x="0" data-y="0"></td>
-				<td data-x="1" data-y="0"></td>
-				<td data-x="2" data-y="0"></td>
+				<td id="0" data-x="0" data-y="0"></td>
+				<td id="1" data-x="1" data-y="0"></td>
+				<td id="2" data-x="2" data-y="0"></td>
 			</tr>
 			<tr>
-				<td data-x="0" data-y="1"></td>
-				<td data-x="1" data-y="1"></td>
-				<td data-x="2" data-y="1"></td>
+				<td id="3" data-x="0" data-y="1"></td>
+				<td id="4" data-x="1" data-y="1"></td>
+				<td id="5" data-x="2" data-y="1"></td>
 			</tr>
 			<tr>
-				<td data-x="0" data-y="2"></td>
-				<td data-x="1" data-y="2"></td>
-				<td data-x="2" data-y="2"></td>
+				<td id="6" data-x="0" data-y="2"></td>
+				<td id="7" data-x="1" data-y="2"></td>
+				<td id="8" data-x="2" data-y="2"></td>
 			</tr>
 		</table>
 		<div id="games"></div>
@@ -26,3 +27,9 @@
 		<button id="previous">Show Previous Games</button>
 	</body>
 </html>
+
+<script type="text/javascript">
+	$(function() {
+		attachListeners();
+	})
+</script>
