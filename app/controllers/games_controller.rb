@@ -11,20 +11,20 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.create(state: params[:game][:state])
-    render json: @game, status: 201
+    @game = Game.create(game_params)
+    render json: @game
   end
 
   def update
     @game = Game.find(params[:id])
-    @game.update(state: params[:game][:state])
+    @game.update(game_params)
     render json: @game
   end
 
-  # private
-  #
-  # def game_params
-  #   params.require(:game).permit(:state)
-  # end to use this, need to have rails-generated forms
+  private
+
+  def game_params
+    params.require(:game).permit(state: [])
+  end
 
 end
