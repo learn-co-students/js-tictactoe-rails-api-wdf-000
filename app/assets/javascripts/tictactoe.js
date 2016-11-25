@@ -72,7 +72,7 @@ function getBoard() {
   return array;
 }
 
-// save button action, first click it should do the POST request to '/games' and 
+// save button action, after the first click it should do the POST request to '/games' and 
 // second time it should do the PATCH request to '/games/:id'
 function save() {
   if (currentGame === 0) {
