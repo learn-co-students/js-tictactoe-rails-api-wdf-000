@@ -19,7 +19,11 @@ var winCombo = [
 
 function attachListeners() {
   $("td").click(function(event) {
-    doTurn(event); 
+    if(checkWinner() || tie()) {
+      alert("This game is over!"); 
+    } else {
+    doTurn(event);
+    } 
   });
   getAllGames();
   save();
@@ -177,23 +181,10 @@ function showGame() {
       var boardText = data.game.state;
       $("td").each(function(index) {
         $(this).text(boardText[index]);
+        currentGame = gameid;
       });
     });
   });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
