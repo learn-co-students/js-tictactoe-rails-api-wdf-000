@@ -35,6 +35,7 @@ describe('Tic Tac Toe Functionality', function() {
   });
 
   describe( "#player", function() {
+
     it("should return the mark of the current player when player is X", function() {
       expect(player()).toEqual("X");
     });
@@ -97,7 +98,9 @@ describe('Tic Tac Toe Functionality', function() {
       // _X_|_O_|_O_
       // _X_|___|___
       //  X |   |
+
       expect(window.message).toHaveBeenCalledWith("Player X Won!");
+
     });
 
     it("calls on 'message' and passes it the string 'Player X Won!' when player X wins diagonally", function() {
