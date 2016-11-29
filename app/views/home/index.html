@@ -5,24 +5,28 @@
 	<body>
 		<table border="1" cellpadding="40">
 			<tr>
-				<td data-x="0" data-y="0"></td>
-				<td data-x="1" data-y="0"></td>
-				<td data-x="2" data-y="0"></td>
+				<td id = "one" data-x="0" data-y="0"></td>
+				<td id = "two" data-x="1" data-y="0"></td>
+				<td id = "three" data-x="2" data-y="0"></td>
 			</tr>
 			<tr>
-				<td data-x="0" data-y="1"></td>
-				<td data-x="1" data-y="1"></td>
-				<td data-x="2" data-y="1"></td>
+				<td id = "four" data-x="0" data-y="1"></td>
+				<td id = "five" data-x="1" data-y="1"></td>
+				<td id = "six" data-x="2" data-y="1"></td>
 			</tr>
 			<tr>
-				<td data-x="0" data-y="2"></td>
-				<td data-x="1" data-y="2"></td>
-				<td data-x="2" data-y="2"></td>
+				<td id = "seven" data-x="0" data-y="2"></td>
+				<td id = "eight" data-x="1" data-y="2"></td>
+				<td id = "nine" data-x="2" data-y="2"></td>
 			</tr>
 		</table>
-		<div id="games"></div>
+		<div id="games">
+			<ul>
+				
+			</ul>
+		</div>
 		<div id="message"></div>
-		<button id="save">Save Game</button>
-		<button id="previous">Show Previous Games</button>
+		<button id="save" onclick ="save()" >Save Game</button>
+		<button id="previous" onclick="prevGames()">Show Previous Games</button>
 	</body>
 </html>
