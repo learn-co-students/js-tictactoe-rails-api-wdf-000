@@ -274,6 +274,7 @@ describe('#integration tests of persistence', function() {
         "responseText" : JSON.stringify(data)
       }
       $('#save').click()
+      // debugger;
       jasmine.Ajax.requests.mostRecent().respondWith(response);
       $('#save').click()
       var request = jasmine.Ajax.requests.mostRecent();
@@ -396,6 +397,7 @@ describe('#integration tests of persistence', function() {
       $('[data-x="0"][data-y="1"]').click();
       $('[data-x="2"][data-y="0"]').click();
       $('[data-x="0"][data-y="2"]').click();
+      // debugger;
       //     // _X_|_O_|_O_
       //     // _X_|___|___
       //     //  X |   |
@@ -413,6 +415,7 @@ describe('#integration tests of persistence', function() {
         "contentType": 'application/json',
         "responseText" : JSON.stringify(data)
       }
+      debugger;
       jasmine.Ajax.requests.mostRecent().respondWith(response);
       $('[data-x="0"][data-y="0"]').click();
       $('[data-x="1"][data-y="0"]').click();
