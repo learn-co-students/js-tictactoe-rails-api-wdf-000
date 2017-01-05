@@ -1,9 +1,9 @@
 'use strict';
 
-describe('Tic Tac Toe Functionality', function() {
-  beforeEach(function(){
-    turn = 0;
-  });
+// describe('Tic Tac Toe Functionality', function() {
+//   beforeEach(function(){
+//     turn = 0;
+//   });
 
   describe( "#attachListeners", function() {
     it("should attach event listeners which call your turn function when someone clicks on a square", function() {
