@@ -50,39 +50,32 @@ function attachListeners(){
 
   });
 
-  $("#previous").on('click', e=>{
+  $("#previous").on("click", e=>{
     e.preventDefault();
     $.ajax({
       url: "/games",
       method: "GET",
-      success: response=> {
-        $("#games").html("");
-        response.games.forEach(e=> {
-          var string = `<a href="games/${e.id}" id="game${e.id}">Game ${e.id}</a><br>`
-          $("#games").append(string);
+      success: response=>{
+        response.games.forEach(game=>{
+          $("#games").append(`<a href = "/games/${game.id}" id ="game${game.id}">Game${game.id}</a> <br>`)
         })
       }
     });
   });
 
-  $("#games").on("click",e=>{
+  $("#games").on("click",'a', e=>{
     e.preventDefault();
-    var elementId = e.toElement.id
-    var id = parseInt(elementId.split("").slice(4,elementId.length).join(""))
-    currentGame = id;
     $.ajax({
-      url: `/games/${id}`,
-      method: 'GET',
+      url: $(e.target).attr("href"),
+      method: "GET",
       success: response=>{
-        board = response.state;
-        for(var i = 0; i < board.length; i++) {
-          $(`#${i}`).html(board[i]);
-        }
-        countTurn();
+        board = response.state
+        board.forEach(function(e,i){
+          $(`td#${i}`).text(e);
+        })
       }
     });
   });
-
 }
 
 function doTurn(e){
