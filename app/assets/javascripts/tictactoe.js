@@ -33,8 +33,7 @@ function attachListeners(){
             state: board
         },
         success: response =>{
-          var string = `<a href="games/${response.id}" id="game${response.id}">Game ${response.id}</a><br>`
-          $("#games").append(string);
+          currentGame = response.id
         }
       });
     }else {
@@ -50,25 +49,29 @@ function attachListeners(){
 
   });
 
-  $("#previous").on("click", e=>{
+  $("#previous").on('click', e=>{
     e.preventDefault();
     $.ajax({
       url: "/games",
       method: "GET",
-      success: response=>{
-        response.games.forEach(game=>{
-          $("#games").append(`<a href = "/games/${game.id}" id ="game${game.id}">Game${game.id}</a> <br>`)
+      success: response=> {
+        $("#games").html("");
+        response.games.forEach(e=> {
+          var string = `<a href="games/${e.id}" id="game${e.id}">Game ${e.id}</a><br>`
+          $("#games").append(string);
         })
       }
     });
   });
 
-  $("#games").on("click",'a', e=>{
+  $("#games").on("click",'a',e=>{
     e.preventDefault();
     $.ajax({
       url: $(e.target).attr("href"),
       method: "GET",
       success: response=>{
+        debugger;
+        currentGame = response.id;
         board = response.state
         board.forEach(function(e,i){
           $(`td#${i}`).text(e);
@@ -76,6 +79,7 @@ function attachListeners(){
       }
     });
   });
+
 }
 
 function doTurn(e){
