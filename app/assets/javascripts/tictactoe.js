@@ -2,6 +2,7 @@ var turn = 0;
 var currentGame = 0;
 var gameOver = false
 var board = ["", "", "", "", "", "", "", "", ""];
+var msg;
 
 function attachListeners() {
   $('td').on('click', function(event) {
@@ -85,12 +86,13 @@ function loadGame(event) {
 
 
 function checkWinner() {
+  var msg;
   if (gameOver == false && turn == 9) {
     msg = "Tie game";
     message(msg);
-    gameOver = true
-    save()
-    newBoard()
+    gameOver = true;
+    save();
+    newBoard();
   } else {
     winner();
   }
@@ -98,7 +100,6 @@ function checkWinner() {
 }
 
 function winner() {
-  var string;
   const winCombinations = [
     [0,1,2],
     [3,4,5],
@@ -112,22 +113,22 @@ function winner() {
   for (combos in winCombinations) {
     var combo = winCombinations[combos];
     var tokens = board[combo[0]] + board[combo[1]] + board[combo[2]];
-    console.log("tokens " + tokens)
+    console.log("tokens " + tokens);
     if (tokens == "XXX") {
-      string = "Player X Won!";
-      message(string)
-      gameOver = true
+      msg = "Player X Won!";
+      message(msg);
+      gameOver = true;
       newBoard();
-      console.log(gameOver)
+      console.log(gameOver);
       // debugger
     } else if (tokens == "OOO") {
-      string = "Player O Won!";
-      message(string)
-      gameOver = true
+      msg = "Player O Won!";
+      message(msg);
+      gameOver = true;
       newBoard();
-      console.log(gameOver)
+      console.log(gameOver);
     }
-  }
+  };
 }
 
 function updateState(cell) {
@@ -140,12 +141,12 @@ function player() {
   if (turn % 2 == 0) {
     return "X";
   } else {
-    return "O"
+    return "O";
   };
 }
 
-function message(string) {
-  $('#message').html(string);
+function message(msg) {
+  $('#message').html(msg);
 }
 
 function newBoard() {
@@ -153,6 +154,8 @@ function newBoard() {
   board = ["", "", "", "", "", "", "", "", ""];
   currentGame = 0;
   turn = 0;
+  gameOver = false;
+  save();
 };
 
 $(document).ready(function() {
