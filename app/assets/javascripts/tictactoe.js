@@ -63,9 +63,9 @@ function save() {
           state: board
         }
       }
-    })
-    console.log("Patch " + currentGame)
-  }
+    });
+    console.log("Patch " + currentGame);
+  };
 }
 
 function loadGame(event) {
@@ -81,7 +81,7 @@ function loadGame(event) {
         $(`#${i}`).html(board[i]);
       }
     }
-  })
+  });
 }
 
 
